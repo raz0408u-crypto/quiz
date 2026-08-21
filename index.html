@@ -591,7 +591,86 @@ function updateGame() {
 // 早押しボタン処理
 // =====================================================
 
+// =====================================================
+// 早押しボタン処理（同時押し対策済み）
+// =====================================================
+
 function buzz() {
+    if (!roomRef || !gameData) return;
+    if (gameData.buzzedBy) return;
+
+    document.getElementById("buzz").disabled = true;
+    const buzzRef = roomRef.child("buzzedBy");
+
+    // ミリ秒単位で一番最初に着いたリクエストだけを受け付ける
+    buzzRef.transaction(current => {
+        if (current === null) {
+            return playerId;
+        }
+        return;
+    }, (error, committed, snapshot) => {
+        if (error) {
+            console.error(error);
+            return;
+        }
+
+        // 自分が一番乗りだと確定した場合のみダイアログを開く
+        if (committed && snapshot.val() === playerId) {
+            setTimeout(() => {
+                const index = gameData.currentQuestion || 0;
+                const q = questions[index % questions.length];
+                const userAnswer = prompt("答えを入力してください");
+
+                if (userAnswer === null) {
+                    roomRef.update({ buzzedBy: null });
+                    return;
+                }
+
+                const correct = userAnswer.trim().toLowerCase() === q.answer.trim().toLowerCase();
+                const playerScore = (gameData.players[playerId] && gameData.players[playerId].score) || 0;
+
+                if (correct) {
+                    roomRef.update({
+                        result: { message: `⭕ ${gameData.players[playerId]?.name || 'プレイヤー'}が正解！` },
+                        [`players/${playerId}/score`]: playerScore + 10
+                    });
+                } else {
+                    roomRef.update({
+                        result: { message: `❌ ${gameData.players[playerId]?.name || 'プレイヤー'}が不正解！` },
+                        [`players/${playerId}/score`]: playerScore - 5,
+                        buzzedBy: null
+                    });
+                }
+            }, 50);
+        }
+    });
+}
+    if (!roomRef || !gameData) return;
+    if (gameData.buzzedBy) return;
+
+    // ボタンを連打できないように即座に無効化
+    document.getElementById("buzz").disabled = true;
+
+    const buzzRef = roomRef.child("buzzedBy");
+
+    // Firebase Transactionでミリ秒単位の先押し判定を行う
+    buzzRef.transaction(current => {
+        if (current === null) {
+            return playerId; // 自分が一番乗りなら書き込む
+        }
+        return; // すでに誰かが押していたら何もしない（キャンセル）
+    }, (error, committed, snapshot) => {
+        if (error) {
+            console.error(error);
+            return;
+        }
+
+        // 自分が確実に「一番乗り」だった場合のみ回答処理を実行
+        if (committed && snapshot.val() === playerId) {
+            openAnswerPrompt();
+        }
+    });
+}() {
     if (!roomRef || !gameData) return;
     if (gameData.buzzedBy) return;
 
