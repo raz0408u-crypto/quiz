@@ -6,18 +6,19 @@
     <title>リアルタイム早押しクイズ</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #f8fafc;
-            --accent-color: #38bdf8;
+            --bg-color: #121826;
+            --card-bg: #1b2333;
+            --text-color: #f3f4f6;
+            --accent-color: #60a5fa;
             --buzz-btn: #ef4444;
-            --buzz-btn-hover: #dc2626;
-            --success: #22c55e;
+            --buzz-btn-active: #dc2626;
+            --success: #10b981;
             --warning: #f59e0b;
+            --border-color: #2d3748;
         }
 
         body {
-            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
@@ -31,66 +32,67 @@
 
         .container {
             background-color: var(--card-bg);
-            border-radius: 16px;
-            padding: 30px;
+            border-radius: 20px;
+            padding: 32px;
             width: 100%;
-            max-width: 650px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
-            border: 1px solid #334155;
+            max-width: 600px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--border-color);
         }
 
         h1 {
             text-align: center;
             margin-top: 0;
+            margin-bottom: 24px;
             color: var(--accent-color);
-            font-size: 1.8rem;
-            letter-spacing: 0.05em;
+            font-size: 1.75rem;
+            font-weight: 700;
         }
 
         .input-group {
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
 
         label {
             display: block;
-            margin-bottom: 5px;
-            font-size: 0.9rem;
-            color: #94a3b8;
+            margin-bottom: 6px;
+            font-size: 0.875rem;
+            color: #9ca3af;
         }
 
         input[type="text"] {
             width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #475569;
-            background-color: #0f172a;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background-color: #121826;
             color: #fff;
             font-size: 1rem;
             box-sizing: border-box;
+            outline: none;
             transition: border-color 0.2s;
         }
 
         input[type="text"]:focus {
-            outline: none;
             border-color: var(--accent-color);
         }
 
         .btn-group {
             display: flex;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 12px;
+            margin-top: 24px;
         }
 
         .btn {
             flex: 1;
-            padding: 12px;
+            padding: 12px 20px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 1rem;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
-            background-color: #3b82f6;
+            background-color: #2563eb;
             color: white;
         }
 
@@ -100,81 +102,92 @@
         }
 
         .btn:disabled {
-            background-color: #475569;
+            background-color: #374151;
             cursor: not-allowed;
             transform: none;
             opacity: 0.6;
         }
 
         .btn-secondary {
-            background-color: #475569;
+            background-color: #374151;
         }
 
         .btn-buzz {
             background-color: var(--buzz-btn);
             color: white;
-            font-size: 2rem;
-            padding: 30px;
+            font-size: 2.25rem;
+            font-weight: 800;
+            padding: 0;
             border-radius: 50%;
-            width: 180px;
-            height: 180px;
-            margin: 20px auto;
-            display: block;
-            box-shadow: 0 6px 0 #991b1b, 0 10px 15px rgba(0, 0, 0, 0.4);
+            width: 200px;
+            height: 200px;
+            margin: 24px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 8px 0 #991b1b, 0 15px 25px rgba(239, 68, 68, 0.3);
             cursor: pointer;
             user-select: none;
+            border: none;
+            transition: all 0.1s;
         }
 
         .btn-buzz:active:not(:disabled) {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 #991b1b, 0 5px 10px rgba(0, 0, 0, 0.4);
+            transform: translateY(6px);
+            box-shadow: 0 2px 0 #991b1b, 0 5px 10px rgba(239, 68, 68, 0.3);
         }
 
         .btn-buzz:disabled {
-            background-color: #475569;
+            background-color: #4b5563;
             box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .header-info {
             display: flex;
             justify-content: space-between;
-            background-color: #0f172a;
-            padding: 10px 15px;
-            border-radius: 8px;
+            align-items: center;
+            background-color: #121826;
+            padding: 12px 20px;
+            border-radius: 12px;
             margin-bottom: 20px;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            border: 1px solid var(--border-color);
         }
 
         .question-box {
-            background-color: #0f172a;
-            border-radius: 8px;
-            padding: 20px;
-            min-height: 100px;
-            font-size: 1.2rem;
+            background-color: #121826;
+            border-radius: 12px;
+            padding: 24px;
+            min-height: 110px;
+            font-size: 1.25rem;
             line-height: 1.6;
-            border: 1px solid #334155;
+            border: 1px solid var(--border-color);
             margin-bottom: 20px;
+            word-break: break-all;
         }
 
         .status-box {
             text-align: center;
-            font-size: 1.1rem;
-            font-weight: bold;
-            min-height: 30px;
+            font-size: 1.15rem;
+            font-weight: 700;
+            min-height: 36px;
             color: var(--warning);
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
 
         .scoreboard {
-            margin-top: 25px;
-            border-top: 1px solid #334155;
-            padding-top: 15px;
+            margin-top: 32px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
         }
 
         .scoreboard h3 {
             margin-top: 0;
+            margin-bottom: 12px;
             font-size: 1rem;
-            color: #94a3b8;
+            color: #9ca3af;
         }
 
         .player-list {
@@ -186,10 +199,11 @@
         .player-item {
             display: flex;
             justify-content: space-between;
-            padding: 8px 12px;
-            background-color: #0f172a;
-            border-radius: 6px;
-            margin-bottom: 6px;
+            padding: 10px 16px;
+            background-color: #121826;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border-color);
         }
 
         .hidden {
@@ -310,7 +324,7 @@
             gameData = snapshot.val();
             if (!gameData) return;
 
-            // 問題番号の更更新＆タイピング表示
+            // 問題番号更新 & タイピング表示
             const qIndex = gameData.currentQuestion || 0;
             document.getElementById("question-num").textContent = qIndex + 1;
 
@@ -318,7 +332,7 @@
                 startTypingQuestion(questions[qIndex % questions.length]?.q || "");
             }
 
-            // ボタン活性制御
+            // 早押しボタンの活性化コントロール
             const buzzBtn = document.getElementById("buzz-btn");
             if (gameData.buzzedBy) {
                 buzzBtn.disabled = true;
@@ -326,7 +340,7 @@
                 buzzBtn.disabled = false;
             }
 
-            // 状態メッセージ表示
+            // 状況メッセージ表示
             const statusDisplay = document.getElementById("status-display");
             if (gameData.result) {
                 statusDisplay.textContent = gameData.result.message;
@@ -342,7 +356,7 @@
         });
     }
 
-    // 文字が順番に出てくるタイピング演出
+    // 問題文を1文字ずつタイピング表示する処理
     function startTypingQuestion(text) {
         if (typingTimer) clearInterval(typingTimer);
         const display = document.getElementById("question-display");
@@ -358,7 +372,7 @@
         }, 100);
     }
 
-    // 【同時押し対策】ミリ秒単位の判定ロジック
+    // 【同時押し判定】ミリ秒単位の判定ロジック
     function buzz() {
         if (!roomRef || !gameData) return;
         if (gameData.buzzedBy) return;
@@ -377,7 +391,6 @@
                 return;
             }
 
-            // 自分が一番乗りだと確定した場合のみ回答権を得る
             if (committed && snapshot.val() === playerId) {
                 setTimeout(() => {
                     const index = gameData.currentQuestion || 0;
